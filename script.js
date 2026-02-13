@@ -30,7 +30,7 @@ yesBtn.addEventListener('click', () => {
 
     // Start Local Music at 1:24 (84 seconds)
     const audio = document.getElementById('main-audio');
-    audio.currentTime = 84;
+    audio.currentTime = 83;
     audio.play();
 });
 
@@ -58,3 +58,4 @@ function createConfetti() {
         setTimeout(() => particle.remove(), 5000);
     }
 }
+
