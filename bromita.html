@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Llenado Grupo Famia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d7e3e 0%, #1a5028 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2d7e3e;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .alert {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            color: #155724;
+            font-size: 14px;
+        }
+        
+        .alert strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .instructions {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #0d47a1;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #2d7e3e;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-copy {
+            background: linear-gradient(135deg, #2d7e3e 0%, #1a5028 100%);
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(45, 126, 62, 0.4);
+        }
+        
+        .code-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .code-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .success-msg {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #155724;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Auto-Llenado Grupo Famia</h1>
+        <p class="subtitle">Código optimizado para el formulario detectado</p>
+        
+        <div class="alert">
+            <strong>✅ Formulario detectado correctamente!</strong>
+            Campos encontrados: nombres, apellidos, email, teléfono, comentarios
+        </div>
+        
+        <div class="instructions">
+            <strong>📋 Instrucciones:</strong>
+            <ol>
+                <li>Mantén abierta la página <strong>https://grupofamia.com/</strong></li>
+                <li>Presiona <strong>F12</strong> → pestaña <strong>"Console"</strong></li>
+                <li>Escribe <code>allow pasting</code> y presiona Enter</li>
+                <li>Haz clic en "Copiar Código Optimizado"</li>
+                <li>Pega en la consola y presiona <strong>Enter</strong></li>
+            </ol>
+        </div>
+        
+        <div class="input-group">
+            <label for="cantidad">Cantidad de envíos:</label>
+            <input type="number" id="cantidad" value="100" min="1" max="1000">
+        </div>
+        
+        <div class="input-group">
+            <label for="delay">Retardo entre envíos (ms):</label>
+            <input type="number" id="delay" value="500" min="0" max="10000" step="50">
+            <small style="color: #666; display: block; margin-top: 5px;">
+                💡 0ms = Máxima velocidad | 100-300ms = Rápido y seguro | 500ms+ = Cauteloso
+            </small>
+        </div>
+        
+        <button class="btn-copy" onclick="copiarCodigo()">📋 Copiar Código Optimizado</button>
+        
+        <div class="success-msg" id="successMsg">
+            ✓ ¡Código copiado! Pégalo en la consola ahora.
+        </div>
+        
+        <div class="code-box">
+            <pre id="codigo"></pre>
+        </div>
+    </div>
+
+    <script>
+        function generarCodigo() {
+            const cantidad = document.getElementById('cantidad').value;
+            const delay = document.getElementById('delay').value;
+            
+            return `// ============================================
+// AUTO-LLENADO FORMULARIO GRUPO FAMIA
+// Versión Optimizada - 100% Compatible
+// ============================================
+
+(async function() {
+    console.clear();
+    console.log('%c🚀 INICIANDO ENVÍO AUTOMÁTICO', 'color: #2d7e3e; font-size: 18px; font-weight: bold; padding: 10px;');
+    console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #2d7e3e;');
+    
+    const nombres = ['Juan', 'María', 'Carlos', 'Ana', 'Luis', 'Carmen', 'Pedro', 'Laura', 'Miguel', 'Sofía', 'Diego', 'Valentina', 'Javier', 'Isabella', 'Fernando', 'Camila', 'Roberto', 'Martina', 'Antonio', 'Lucía', 'Andrés', 'Gabriela', 'Ricardo', 'Paula', 'Manuel', 'Elena', 'Raúl', 'Patricia'];
+    
+    const apellidos = ['García', 'Rodríguez', 'Martínez', 'López', 'González', 'Pérez', 'Sánchez', 'Ramírez', 'Torres', 'Flores', 'Rivera', 'Gómez', 'Díaz', 'Cruz', 'Morales', 'Reyes', 'Jiménez', 'Hernández', 'Ruiz', 'Mendoza', 'Vargas', 'Castro', 'Ortiz', 'Silva', 'Rojas', 'Vega'];
+    
+    const dominios = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'email.com', 'live.com'];
+    
+    let enviados = 0;
+    let exitosos = 0;
+    let errores = 0;
+    const totalEnvios = ${cantidad};
+    const delayMs = ${delay};
+    
+    console.log(\`📊 Configuración:\`);
+    console.log(\`   Total de envíos: \${totalEnvios}\`);
+    console.log(\`   Retardo: \${delayMs}ms\`);
+    console.log(\`   Tiempo estimado: \${Math.round(totalEnvios * (delayMs + 300) / 1000)} segundos\\n\`);
+    
+    function generarDatos() {
+        const nombre = nombres[Math.floor(Math.random() * nombres.length)];
+        const apellido = apellidos[Math.floor(Math.random() * apellidos.length)];
+        const dominio = dominios[Math.floor(Math.random() * dominios.length)];
+        const num = Math.floor(Math.random() * 10000);
+        
+        return {
+            nombres: nombre,
+            apellidos: apellido,
+            email: \`\${nombre.toLowerCase()}.\${apellido.toLowerCase()}\${num}@\${dominio}\`,
+            telefono: '9' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0'),
+            comentarios: \`Mensaje automático #\${enviados + 1}. Me gustaría recibir más información sobre sus productos y servicios. Gracias.\`
+        };
+    }
+    
+    function llenarCampo(name, valor) {
+        const campo = document.querySelector(\`input[name="\${name}"], textarea[name="\${name}"]\`);
+        if (campo) {
+            // Método 1: Asignación directa
+            campo.value = valor;
+            
+            // Método 2: Simular escritura para frameworks modernos
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, 
+                'value'
+            ).set;
+            nativeInputValueSetter.call(campo, valor);
+            
+            // Método 3: Disparar todos los eventos necesarios
+            campo.dispatchEvent(new Event('input', { bubbles: true }));
+            campo.dispatchEvent(new Event('change', { bubbles: true }));
+            campo.dispatchEvent(new Event('blur', { bubbles: true }));
+            
+            return true;
+        }
+        return false;
+    }
+    
+    function llenarFormulario(datos) {
+        let llenados = 0;
+        
+        if (llenarCampo('nombres', datos.nombres)) llenados++;
+        if (llenarCampo('apellidos', datos.apellidos)) llenados++;
+        if (llenarCampo('email', datos.email)) llenados++;
+        if (llenarCampo('telefono', datos.telefono)) llenados++;
+        if (llenarCampo('comentarios', datos.comentarios)) llenados++;
+        
+        return llenados;
+    }
+    
+    function clickEnviar() {
+        const botones = document.querySelectorAll('button');
+        for (let boton of botones) {
+            const texto = boton.textContent.trim().toLowerCase();
+            if (texto.includes('enviar información') || texto.includes('enviar')) {
+                boton.click();
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    async function procesarEnvio(numero) {
+        try {
+            const datos = generarDatos();
+            
+            console.log(\`\\n%c━━━ Envío #\${numero}/\${totalEnvios} ━━━\`, 'color: #2196F3; font-weight: bold;');
+            console.log(\`👤 Nombre: \${datos.nombres} \${datos.apellidos}\`);
+            console.log(\`📧 Email: \${datos.email}\`);
+            console.log(\`📱 Tel: \${datos.telefono}\`);
+            
+            // Llenar formulario
+            const camposLlenados = llenarFormulario(datos);
+            console.log(\`✏️  Campos llenados: \${camposLlenados}/5\`);
+            
+            if (camposLlenados < 5) {
+                console.log(\`%c⚠️  ADVERTENCIA: Solo se llenaron \${camposLlenados} campos\`, 'color: #FF9800;');
+            }
+            
+            // Esperar para que se procesen los eventos
+            await new Promise(r => setTimeout(r, 300));
+            
+            // Click en enviar
+            const enviado = clickEnviar();
+            
+            if (enviado) {
+                exitosos++;
+                console.log(\`%c✓ ENVIADO EXITOSAMENTE\`, 'color: #4CAF50; font-weight: bold;');
+            } else {
+                errores++;
+                console.log(\`%c✗ ERROR: No se pudo hacer clic en enviar\`, 'color: #F44336; font-weight: bold;');
+            }
+            
+            // Mostrar progreso
+            const progreso = Math.round((numero / totalEnvios) * 100);
+            if (numero % 10 === 0 || numero === totalEnvios) {
+                console.log(\`\\n%c📈 PROGRESO: \${progreso}% (\${numero}/\${totalEnvios})\`, 'color: #9C27B0; font-weight: bold; font-size: 14px;');
+                console.log(\`✓ Exitosos: \${exitosos} | ✗ Errores: \${errores}\`);
+            }
+            
+        } catch (error) {
+            errores++;
+            console.log(\`%c✗ ERROR: \${error.message}\`, 'color: #F44336; font-weight: bold;');
+        }
+    }
+    
+    // EJECUTAR ENVÍOS
+    console.log(\`\\n%c⏳ Iniciando envíos...\`, 'color: #FF9800; font-size: 14px;');
+    
+    for (let i = 1; i <= totalEnvios; i++) {
+        enviados = i;
+        await procesarEnvio(i);
+        
+        // Esperar antes del siguiente envío (excepto en el último)
+        if (i < totalEnvios) {
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+    }
+    
+    // RESUMEN FINAL
+    console.log(\`\\n\`);
+    console.log(\`%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\`, 'color: #2d7e3e;');
+    console.log(\`%c🎉 PROCESO COMPLETADO\`, 'color: #2d7e3e; font-size: 20px; font-weight: bold;');
+    console.log(\`%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\`, 'color: #2d7e3e;');
+    console.log(\`\\n📊 ESTADÍSTICAS FINALES:\`);
+    console.log(\`   Total procesados: \${enviados}\`);
+    console.log(\`   %c✓ Exitosos: \${exitosos}\`, 'color: #4CAF50; font-weight: bold;');
+    console.log(\`   %c✗ Errores: \${errores}\`, 'color: #F44336; font-weight: bold;');
+    console.log(\`   Tasa de éxito: \${Math.round((exitosos/enviados)*100)}%\`);
+    console.log(\`\\n⏱️  Tiempo total: \${Math.round((enviados * (delayMs + 300)) / 1000)} segundos (\${Math.round((enviados * (delayMs + 300)) / 1000 / 60)} min)\`);
+    console.log(\`\\n%c✅ Todos los formularios fueron procesados.\`, 'color: #2d7e3e; font-size: 14px;');
+    
+})();`;
+        }
+        
+        function actualizarCodigo() {
+            const codigo = generarCodigo();
+            document.getElementById('codigo').textContent = codigo;
+        }
+        
+        function copiarCodigo() {
+            const codigo = generarCodigo();
+            navigator.clipboard.writeText(codigo).then(() => {
+                const msg = document.getElementById('successMsg');
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 5000);
+            });
+        }
+        
+        document.getElementById('cantidad').addEventListener('input', actualizarCodigo);
+        document.getElementById('delay').addEventListener('input', actualizarCodigo);
+        
+        actualizarCodigo();
+    </script>
+</body>
+</html>

@@ -97,18 +97,23 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
   z-index: 1000;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  /* Start from top to allow scrolling */
   align-items: center;
   text-align: center;
+  padding-top: 50px;
 }
 
 .celebration h2 {
   color: var(--primary-pink);
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 3.5rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding-top: 100px;
+  /* Space for the top of the scroll */
 }
 
 .heart {
@@ -152,20 +157,44 @@ button {
   }
 }
 
+/* Music Player Styles */
+.music-player {
+  margin: 2rem 0;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 1.5rem;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: fadeIn 2s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.music-player p {
+  margin: 0;
+  font-weight: 600;
+  color: #c9184a;
+}
+
 /* Collage Styles */
 .collage-container {
-  margin-top: 5rem;
-  padding: 40px 0;
+  margin-top: 2rem;
+  padding: 20px 0;
   width: 90%;
   max-width: 1000px;
   animation: fadeIn 1.5s ease-out;
 }
 
 .collage-container h3 {
-  color: var(--primary-pink);
-  font-size: 1.8rem;
+  color: #c9184a;
+  /* Darker, more visible pink */
+  font-size: 2rem;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 10;
 }
 
 .collage-grid {
@@ -176,7 +205,8 @@ button {
   justify-items: center;
 }
 
-.collage-img {
+.collage-img,
+video.collage-img {
   width: 100%;
   aspect-ratio: 1/1;
   object-fit: cover;

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrador de Credenciales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .url-input-area {
+            margin-bottom: 15px;
+        }
+
+        .url-input-area label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .url-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e7ff;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .url-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .url-list {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .url-tag {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .url-tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .url-tag .remove:hover {
+            opacity: 1;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: white;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f9fafb;
+        }
+
+        .upload-area.dragover {
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-container {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .stats {
+            display: none;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: none;
+        }
+
+        .file-info {
+            background: #eff6ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .file-name {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+
+        .file-size {
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        .log-container {
+            background: #1e293b;
+            color: #10b981;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            display: none;
+        }
+
+        .log-line {
+            margin: 3px 0;
+        }
+
+        .helper-text {
+            color: #6b7280;
+            font-size: 0.85em;
+            margin-top: 8px;
+        }
+
+        .error-text {
+            color: #ef4444;
+            font-size: 0.85em;
+            margin-top: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Filtrador de Credenciales</h1>
+        <p class="subtitle">Filtra credenciales por dominios específicos</p>
+
+        <!-- Sección de URLs -->
+        <div class="section">
+            <div class="section-title">
+                <span>🌐</span>
+                <span>Dominios a Filtrar</span>
+            </div>
+            <div class="url-input-area">
+                <label>Ingresa los dominios/URLs (uno por línea):</label>
+                <textarea 
+                    class="url-textarea" 
+                    id="urlInput" 
+                    placeholder="Ejemplo:&#10;https://auth.openai.com&#10;https://auth0.openai.com&#10;facebook.com&#10;twitter.com"
+                >https://auth.openai.com
+https://auth0.openai.com</textarea>
+                <p class="helper-text">💡 Puedes usar URLs completas o solo dominios (ej: openai.com)</p>
+                <p class="error-text" id="errorText">⚠️ Por favor ingresa al menos un dominio</p>
+            </div>
+            <div class="url-list" id="urlList"></div>
+        </div>
+
+        <!-- Sección de archivo -->
+        <div class="section">
+            <div class="section-title">
+                <span>📁</span>
+                <span>Archivo a Procesar</span>
+            </div>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📄</div>
+                <h3>Arrastra tu archivo TXT aquí</h3>
+                <p>o haz clic para seleccionar</p>
+                <input type="file" id="fileInput" accept=".txt">
+            </div>
+
+            <div class="file-info" id="fileInfo">
+                <div class="file-name" id="fileName"></div>
+                <div class="file-size" id="fileSize"></div>
+            </div>
+        </div>
+
+        <button class="btn" id="processBtn" disabled>Procesar Archivo</button>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+
+        <div class="log-container" id="logContainer"></div>
+
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <span class="stat-label">📊 Líneas procesadas:</span>
+                <span class="stat-value" id="totalLines">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">🎯 Líneas encontradas:</span>
+                <span class="stat-value" id="foundLines">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">📧 Credenciales extraídas:</span>
+                <span class="stat-value" id="credentials">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">⏱️ Tiempo transcurrido:</span>
+                <span class="stat-value" id="timeElapsed">0s</span>
+            </div>
+        </div>
+
+        <button class="btn download-btn" id="downloadBtn">⬇️ Descargar Resultados</button>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const stats = document.getElementById('stats');
+        const fileInfo = document.getElementById('fileInfo');
+        const logContainer = document.getElementById('logContainer');
+        const urlInput = document.getElementById('urlInput');
+        const urlList = document.getElementById('urlList');
+        const errorText = document.getElementById('errorText');
+
+        let selectedFile = null;
+        let resultData = '';
+        let activeDomains = [];
+
+        // Actualizar dominios activos cuando cambia el textarea
+        urlInput.addEventListener('input', updateDomains);
+        
+        function updateDomains() {
+            const urls = urlInput.value
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
+            
+            activeDomains = urls.map(url => {
+                // Extraer dominio de URL completa
+                try {
+                    if (url.startsWith('http://') || url.startsWith('https://')) {
+                        return new URL(url).hostname;
+                    }
+                    return url;
+                } catch {
+                    return url;
+                }
+            });
+
+            // Mostrar tags de dominios activos
+            urlList.innerHTML = '';
+            if (activeDomains.length > 0) {
+                activeDomains.forEach((domain, index) => {
+                    const tag = document.createElement('div');
+                    tag.className = 'url-tag';
+                    tag.innerHTML = `
+                        <span>${domain}</span>
+                        <span class="remove" onclick="removeDomain(${index})">✕</span>
+                    `;
+                    urlList.appendChild(tag);
+                });
+                errorText.style.display = 'none';
+            }
+
+            checkReadyState();
+        }
+
+        window.removeDomain = function(index) {
+            const lines = urlInput.value.split('\n').filter(line => line.trim());
+            lines.splice(index, 1);
+            urlInput.value = lines.join('\n');
+            updateDomains();
+        }
+
+        function checkReadyState() {
+            processBtn.disabled = !(selectedFile && activeDomains.length > 0);
+        }
+
+        function addLog(message) {
+            const logLine = document.createElement('div');
+            logLine.className = 'log-line';
+            logLine.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(logLine);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            selectedFile = file;
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatBytes(file.size);
+            fileInfo.style.display = 'block';
+            checkReadyState();
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        processBtn.addEventListener('click', processFile);
+
+        async function processFile() {
+            if (!selectedFile) return;
+            
+            if (activeDomains.length === 0) {
+                errorText.style.display = 'block';
+                return;
+            }
+
+            processBtn.disabled = true;
+            progressContainer.style.display = 'block';
+            stats.style.display = 'block';
+            downloadBtn.style.display = 'none';
+            logContainer.style.display = 'block';
+            logContainer.innerHTML = '';
+
+            addLog('Iniciando procesamiento...');
+            addLog(`Dominios a buscar: ${activeDomains.join(', ')}`);
+
+            const startTime = Date.now();
+            const credenciales = new Set();
+            let lineasProcesadas = 0;
+            let lineasEncontradas = 0;
+            let bytesLeidos = 0;
+
+            const reader = selectedFile.stream().getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            
+            const uiInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('timeElapsed').textContent = elapsed + 's';
+            }, 1000);
+
+            try {
+                addLog('Leyendo archivo línea por línea...');
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    bytesLeidos += value.length;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
+
+                    for (const linea of lines) {
+                        lineasProcesadas++;
+
+                        if (lineasProcesadas % 100000 === 0) {
+                            addLog(`Procesadas ${lineasProcesadas.toLocaleString()} líneas...`);
+                        }
+
+                        if (lineasProcesadas % 10000 === 0) {
+                            document.getElementById('totalLines').textContent = lineasProcesadas.toLocaleString();
+                            document.getElementById('foundLines').textContent = lineasEncontradas.toLocaleString();
+                            document.getElementById('credentials').textContent = credenciales.size.toLocaleString();
+                            
+                            const progress = Math.min(95, (bytesLeidos / selectedFile.size) * 100);
+                            progressFill.style.width = progress + '%';
+                            progressFill.textContent = Math.round(progress) + '%';
+                            
+                            await new Promise(resolve => setTimeout(resolve, 0));
+                        }
+
+                        const lineaLower = linea.toLowerCase();
+                        
+                        // Verificar si la línea contiene alguno de los dominios activos
+                        if (activeDomains.some(dom => lineaLower.includes(dom.toLowerCase()))) {
+                            lineasEncontradas++;
+                            
+                            const partes = linea.trim().split(':');
+                            if (partes.length >= 3) {
+                                const email = partes[partes.length - 2];
+                                const password = partes[partes.length - 1];
+                                
+                                if (email.includes('@') && email.includes('.')) {
+                                    credenciales.add(email + ':' + password);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Procesar última línea
+                if (buffer && activeDomains.some(dom => buffer.toLowerCase().includes(dom.toLowerCase()))) {
+                    lineasEncontradas++;
+                    const partes = buffer.trim().split(':');
+                    if (partes.length >= 3) {
+                        const email = partes[partes.length - 2].trim();
+                        const password = partes[partes.length - 1].trim();
+                        if (email.includes('@') && email.includes('.')) {
+                            credenciales.add(email + ':' + password);
+                        }
+                    }
+                }
+
+                clearInterval(uiInterval);
+
+                document.getElementById('totalLines').textContent = lineasProcesadas.toLocaleString();
+                document.getElementById('foundLines').textContent = lineasEncontradas.toLocaleString();
+                document.getElementById('credentials').textContent = credenciales.size.toLocaleString();
+                document.getElementById('timeElapsed').textContent = Math.floor((Date.now() - startTime) / 1000) + 's';
+
+                progressFill.style.width = '100%';
+                progressFill.textContent = '✓ Completado';
+
+                addLog('✓ Procesamiento completado exitosamente');
+                addLog(`Total: ${lineasProcesadas.toLocaleString()} líneas procesadas`);
+                addLog(`Encontradas: ${lineasEncontradas.toLocaleString()} líneas con dominios especificados`);
+                addLog(`Extraídas: ${credenciales.size.toLocaleString()} credenciales únicas`);
+
+                resultData = Array.from(credenciales).sort().join('\n');
+                
+                downloadBtn.style.display = 'block';
+                processBtn.disabled = false;
+                checkReadyState();
+
+            } catch (error) {
+                clearInterval(uiInterval);
+                addLog(`✗ Error: ${error.message}`);
+                alert('Error al procesar el archivo: ' + error.message);
+                processBtn.disabled = false;
+                checkReadyState();
+            }
+        }
+
+        downloadBtn.addEventListener('click', () => {
+            const blob = new Blob([resultData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'credenciales_filtradas.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            addLog('✓ Archivo descargado: credenciales_filtradas.txt');
+        });
+
+        // Inicializar dominios al cargar
+        updateDomains();
+    </script>
+</body>
+</html>

@@ -27,6 +27,10 @@ noBtn.addEventListener('click', (e) => {
 yesBtn.addEventListener('click', () => {
     celebration.style.display = 'flex';
     createConfetti();
+
+    // Start Local Music
+    const audio = document.getElementById('main-audio');
+    audio.play();
 });
 
 function createConfetti() {
