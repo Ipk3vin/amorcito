@@ -28,8 +28,9 @@ yesBtn.addEventListener('click', () => {
     celebration.style.display = 'flex';
     createConfetti();
 
-    // Start Local Music
+    // Start Local Music at 1:24 (84 seconds)
     const audio = document.getElementById('main-audio');
+    audio.currentTime = 84;
     audio.play();
 });
 
