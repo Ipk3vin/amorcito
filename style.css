@@ -21,6 +21,8 @@ body {
   align-items: center;
   background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
   perspective: 1000px;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll from dog/hearts */
 }
 
 .container {
@@ -265,14 +267,6 @@ video.collage-img {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Celebration GIF Background */
-.celebration {
-  background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG56Znd6bnR6bnR6bnR6bnR6bnR6bnR6bnR6bnR6bnR6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lTfuxTeN8L3A3C/giphy.gif');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
-
 /* Firework Heart Animation */
 .firework-heart {
   position: fixed;
@@ -293,6 +287,43 @@ video.collage-img {
     transform: translate(var(--x), var(--y)) scale(0) rotate(var(--r));
     opacity: 0;
     filter: blur(2px);
+  }
+}
+
+/* Heart Rain */
+.heart-rain {
+  position: fixed;
+  top: -50px;
+  color: #ff4d6d;
+  font-size: 1.5rem;
+  pointer-events: none;
+  z-index: 10;
+  animation: heartFall var(--d) linear forwards;
+}
+
+@keyframes heartFall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Pulsing Card */
+.container {
+  animation: cardPulse 4s ease-in-out infinite;
+}
+
+@keyframes cardPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 32px 0 rgba(255, 77, 109, 0.2);
+  }
+
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 15px 45px 0 rgba(255, 77, 109, 0.4);
   }
 }
 

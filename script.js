@@ -45,14 +45,42 @@ yesBtn.addEventListener('click', () => {
     const video = document.getElementById('main-video');
     video.currentTime = 83;
     video.play();
-
-    // Enable heart fireworks on click/touch
-    window.addEventListener('click', createHeartFirework);
-    window.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        createHeartFirework({ clientX: touch.clientX, clientY: touch.clientY });
-    });
 });
+
+// Enable heart fireworks on click/touch globally from the start
+window.addEventListener('click', createHeartFirework);
+window.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    createHeartFirework({ clientX: touch.clientX, clientY: touch.clientY });
+});
+
+// Romantic Autostart
+document.addEventListener('DOMContentLoaded', () => {
+    startHeartRain();
+
+    // Initial surprise fireworks
+    setTimeout(() => {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        createHeartFirework({ clientX: centerX, clientY: centerY - 100 });
+        setTimeout(() => createHeartFirework({ clientX: centerX + 100, clientY: centerY + 50 }), 500);
+        setTimeout(() => createHeartFirework({ clientX: centerX - 100, clientY: centerY + 50 }), 1000);
+    }, 1500);
+});
+
+function startHeartRain() {
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart-rain');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.setProperty('--d', (Math.random() * 3 + 3) + 's');
+        heart.style.opacity = Math.random();
+        heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }, 400);
+}
 
 function createHeartFirework(e) {
     const colors = ['#ff4d6d', '#ff758f', '#c9184a', '#ffb3c1', '#ffffff'];
