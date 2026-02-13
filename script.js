@@ -41,10 +41,8 @@ yesBtn.addEventListener('click', () => {
     celebration.style.display = 'flex';
     createConfetti();
 
-    // Start Main Video at 1:23 (83 seconds)
+    // The video will start paused and from the beginning as requested
     const video = document.getElementById('main-video');
-    video.currentTime = 83;
-    video.play();
 });
 
 // Enable heart fireworks on click/touch globally from the start
